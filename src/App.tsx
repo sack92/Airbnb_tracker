@@ -147,9 +147,22 @@ function App() {
     }
   };
 
-  const handleAddProperty = async (propertyData: Omit<Property, 'id' | 'createdAt'>) => {
+  const handleAddProperty = async (propertyData: Omit<Property, 'id' | 'createdAt'>, bookingDates?: Array<{ date: string; status: 'available' | 'booked'; price: number }>) => {
     try {
-      await addProperty(propertyData);
+      const newProperty = await addProperty(propertyData);
+      
+      // Add booking dates if provided
+      if (bookingDates && bookingDates.length > 0) {
+        for (const booking of bookingDates) {
+          await upsertBooking({
+            propertyId: newProperty.id,
+            date: booking.date,
+            status: booking.status,
+            price: booking.price,
+          });
+        }
+      }
+      
       setShowAddPropertyModal(false);
     } catch (err) {
       console.error('Failed to add property:', err);
@@ -198,9 +211,9 @@ function App() {
   const handleDateClick = async (date: string, currentStatus: string) => {
     if (!selectedProperty) return;
 
-    const statusCycle = ['booked', 'blocked', 'available'];
+    const statusCycle = ['booked', 'available'];
     const currentIndex = statusCycle.indexOf(currentStatus);
-    const nextStatus = statusCycle[(currentIndex + 1) % statusCycle.length] as 'available' | 'blocked' | 'booked';
+    const nextStatus = statusCycle[(currentIndex + 1) % statusCycle.length] as 'available' | 'booked';
 
     try {
       await upsertBooking({
@@ -303,6 +316,7 @@ function App() {
               onEditArea={handleEditArea}
               onDeleteArea={handleDeleteArea}
               onAreaSelect={setSelectedArea}
+              onAddArea={() => setShowAddAreaModal(true)}
             />
           </>
         )}

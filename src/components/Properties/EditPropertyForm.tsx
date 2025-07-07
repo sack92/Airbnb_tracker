@@ -19,6 +19,7 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({ property, areas, on
     description: property.description,
     bedrooms: property.bedrooms.toString(),
     propertyType: property.propertyType as 'luxury' | 'normal',
+    isSuperhost: property.isSuperhost,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -28,6 +29,10 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({ property, areas, on
     
     if (!formData.name.trim()) {
       newErrors.name = 'Property name is required';
+    }
+    
+    if (!formData.airbnbLink.trim()) {
+      newErrors.airbnbLink = 'Airbnb link is required';
     }
     
     if (!formData.avgPricePerDay.trim()) {
@@ -55,6 +60,7 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({ property, areas, on
         description: formData.description.trim(),
         bedrooms: Number(formData.bedrooms),
         propertyType: formData.propertyType,
+        isSuperhost: formData.isSuperhost,
       });
     }
   };
@@ -91,10 +97,11 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({ property, areas, on
       />
       
       <Input
-        label="Airbnb Link (Optional)"
+        label="Airbnb Link"
         value={formData.airbnbLink}
         onChange={(e) => setFormData({ ...formData, airbnbLink: e.target.value })}
         placeholder="https://airbnb.com/rooms/123456"
+        error={errors.airbnbLink}
       />
       
       <div className="grid grid-cols-2 gap-4">
@@ -127,15 +134,31 @@ const EditPropertyForm: React.FC<EditPropertyFormProps> = ({ property, areas, on
           </select>
         </div>
       </div>
-      
-      <Input
-        label="Average Price per Day (₹)"
-        type="number"
-        value={formData.avgPricePerDay}
-        onChange={(e) => setFormData({ ...formData, avgPricePerDay: e.target.value })}
-        placeholder="3000"
-        error={errors.avgPricePerDay}
-      />
+
+      <div className="grid grid-cols-2 gap-4">
+        <Input
+          label="Average Price per Day (₹)"
+          type="number"
+          value={formData.avgPricePerDay}
+          onChange={(e) => setFormData({ ...formData, avgPricePerDay: e.target.value })}
+          placeholder="3000"
+          error={errors.avgPricePerDay}
+        />
+        
+        <div>
+          <label className="block text-sm font-medium text-neutral-700 mb-1">
+            Superhost Status
+          </label>
+          <select
+            value={formData.isSuperhost ? 'yes' : 'no'}
+            onChange={(e) => setFormData({ ...formData, isSuperhost: e.target.value === 'yes' })}
+            className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white hover:border-neutral-400"
+          >
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+        </div>
+      </div>
       
       <div>
         <label className="block text-sm font-medium text-neutral-700 mb-1">

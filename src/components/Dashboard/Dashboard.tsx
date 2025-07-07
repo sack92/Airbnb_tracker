@@ -17,6 +17,7 @@ interface DashboardProps {
   onEditArea: (area: Area) => void;
   onDeleteArea: (area: Area) => void;
   onAreaSelect: (area: Area) => void;
+  onAddArea: () => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
@@ -31,6 +32,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   onEditArea,
   onDeleteArea,
   onAreaSelect,
+  onAddArea,
 }) => {
   const [showCitySelector, setShowCitySelector] = useState(false);
   
@@ -141,6 +143,21 @@ const Dashboard: React.FC<DashboardProps> = ({
               
               {showCitySelector && (
                 <div className="absolute right-0 top-full mt-1 w-64 bg-white border border-neutral-200 rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
+                  {/* Add City Option */}
+                  <button
+                    onClick={() => {
+                      onAddArea();
+                      setShowCitySelector(false);
+                    }}
+                    className="w-full flex items-center px-4 py-3 text-left hover:bg-blue-50 transition-colors border-b border-neutral-100 text-blue-600"
+                  >
+                    <Plus className="h-4 w-4 mr-3" />
+                    <div>
+                      <div className="font-medium">Add New City</div>
+                      <div className="text-xs text-blue-500">Create a new city to track</div>
+                    </div>
+                  </button>
+                  
                   {areas.map((area) => {
                     const propertyCount = properties.filter(p => p.areaId === area.id).length;
                     return (

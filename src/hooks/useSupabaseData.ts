@@ -57,6 +57,7 @@ export function useSupabaseData() {
         description: property.description || '',
         bedrooms: property.bedrooms || 1,
         propertyType: property.property_type || 'normal',
+        isSuperhost: property.is_superhost || false,
         createdAt: new Date(property.created_at),
       })));
 
@@ -64,7 +65,7 @@ export function useSupabaseData() {
         id: booking.id,
         propertyId: booking.property_id,
         date: booking.date,
-        status: booking.status || 'available',
+        status: booking.status === 'blocked' ? 'available' : booking.status || 'available',
         price: Number(booking.price) || 0,
         notes: booking.notes || '',
       })));
@@ -166,6 +167,7 @@ export function useSupabaseData() {
           description: propertyData.description || '',
           bedrooms: propertyData.bedrooms,
           property_type: propertyData.propertyType,
+          is_superhost: propertyData.isSuperhost,
         })
         .select()
         .single();
@@ -181,6 +183,7 @@ export function useSupabaseData() {
         description: data.description || '',
         bedrooms: data.bedrooms || 1,
         propertyType: data.property_type || 'normal',
+        isSuperhost: data.is_superhost || false,
         createdAt: new Date(data.created_at),
       };
 
@@ -202,6 +205,7 @@ export function useSupabaseData() {
       if (propertyData.description !== undefined) updateData.description = propertyData.description;
       if (propertyData.bedrooms !== undefined) updateData.bedrooms = propertyData.bedrooms;
       if (propertyData.propertyType !== undefined) updateData.property_type = propertyData.propertyType;
+      if (propertyData.isSuperhost !== undefined) updateData.is_superhost = propertyData.isSuperhost;
 
       const { data, error } = await supabase
         .from('properties')
@@ -221,6 +225,7 @@ export function useSupabaseData() {
         description: data.description || '',
         bedrooms: data.bedrooms || 1,
         propertyType: data.property_type || 'normal',
+        isSuperhost: data.is_superhost || false,
         createdAt: new Date(data.created_at),
       };
 
@@ -270,7 +275,7 @@ export function useSupabaseData() {
         id: data.id,
         propertyId: data.property_id,
         date: data.date,
-        status: data.status || 'available',
+        status: data.status === 'blocked' ? 'available' : data.status || 'available',
         price: Number(data.price) || 0,
         notes: data.notes || '',
       };

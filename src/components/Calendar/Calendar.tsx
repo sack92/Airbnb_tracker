@@ -88,8 +88,6 @@ const Calendar: React.FC<CalendarProps> = ({
     switch (status) {
       case 'available':
         return 'bg-green-100 text-green-800 border-green-200';
-      case 'blocked':
-        return 'bg-red-100 text-red-800 border-red-200';
       case 'booked':
         return 'bg-blue-100 text-blue-800 border-blue-200';
       default:
@@ -101,8 +99,6 @@ const Calendar: React.FC<CalendarProps> = ({
     switch (status) {
       case 'available':
         return 'A';
-      case 'blocked':
-        return 'K';
       case 'booked':
         return 'B';
       default:
@@ -127,8 +123,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
   const currentMonthBookings = bookings.filter(b => b.date.startsWith(currentDate.toISOString().slice(0, 7)));
   const bookedDays = currentMonthBookings.filter(b => b.status === 'booked').length;
-  const blockedDays = currentMonthBookings.filter(b => b.status === 'blocked').length;
-  const availableDays = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() - bookedDays - blockedDays;
+  const availableDays = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() - bookedDays;
   const monthlyEarnings = currentMonthBookings.filter(b => b.status === 'booked').reduce((sum, b) => sum + b.price, 0);
   const bookingRate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() > 0 ? 
     (bookedDays / new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate()) * 100 : 0;
@@ -202,24 +197,16 @@ const Calendar: React.FC<CalendarProps> = ({
               <span className="text-sm text-neutral-600">Available (A)</span>
             </div>
             <div className="flex items-center">
-              <div className="w-4 h-4 bg-red-100 border-2 border-red-200 rounded mr-2"></div>
-              <span className="text-sm text-neutral-600">Blocked (K)</span>
-            </div>
-            <div className="flex items-center">
               <div className="w-4 h-4 bg-blue-100 border-2 border-blue-200 rounded mr-2"></div>
               <span className="text-sm text-neutral-600">Booked (B)</span>
             </div>
           </div>
 
           {/* Monthly Summary */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 bg-neutral-50 rounded-lg p-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-neutral-50 rounded-lg p-4">
             <div className="text-center">
               <div className="text-lg font-semibold text-neutral-900">{availableDays}</div>
               <div className="text-sm text-neutral-600">Available Days</div>
-            </div>
-            <div className="text-center">
-              <div className="text-lg font-semibold text-neutral-900">{blockedDays}</div>
-              <div className="text-sm text-neutral-600">Blocked Days</div>
             </div>
             <div className="text-center">
               <div className="text-lg font-semibold text-neutral-900">{bookedDays}</div>

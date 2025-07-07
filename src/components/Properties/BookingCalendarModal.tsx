@@ -23,7 +23,7 @@ const BookingCalendarModal: React.FC<BookingCalendarModalProps> = ({
   const [selectedDates, setSelectedDates] = useState<Map<string, { status: 'available' | 'blocked' | 'booked'; price: number }>>(
     new Map(initialDates.map(d => [d.date, { status: d.status, price: d.price }]))
   );
-  const [currentStatus, setCurrentStatus] = useState<'available' | 'blocked' | 'booked'>('available');
+  const [currentStatus, setCurrentStatus] = useState<'available' | 'booked'>('available');
   const [currentPrice, setCurrentPrice] = useState(defaultPrice.toString());
 
   if (!isOpen) return null;
@@ -82,8 +82,6 @@ const BookingCalendarModal: React.FC<BookingCalendarModalProps> = ({
     switch (dateData.status) {
       case 'available':
         return 'bg-green-100 border-green-300 text-green-800';
-      case 'blocked':
-        return 'bg-red-100 border-red-300 text-red-800';
       case 'booked':
         return 'bg-blue-100 border-blue-300 text-blue-800';
       default:
@@ -94,8 +92,7 @@ const BookingCalendarModal: React.FC<BookingCalendarModalProps> = ({
   const getStatusLabel = (status: string) => {
     switch (status) {
       case 'available': return 'A';
-      case 'blocked': return 'B';
-      case 'booked': return 'R';
+      case 'booked': return 'B';
       default: return '';
     }
   };
@@ -135,11 +132,10 @@ const BookingCalendarModal: React.FC<BookingCalendarModalProps> = ({
               </label>
               <select
                 value={currentStatus}
-                onChange={(e) => setCurrentStatus(e.target.value as 'available' | 'blocked' | 'booked')}
+                onChange={(e) => setCurrentStatus(e.target.value as 'available' | 'booked')}
                 className="w-full px-3 py-2 border border-neutral-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="available">Available</option>
-                <option value="blocked">Blocked</option>
                 <option value="booked">Booked</option>
               </select>
             </div>
@@ -220,12 +216,8 @@ const BookingCalendarModal: React.FC<BookingCalendarModalProps> = ({
               <span className="text-sm text-neutral-600">Available (A)</span>
             </div>
             <div className="flex items-center">
-              <div className="w-4 h-4 bg-red-100 border-2 border-red-300 rounded mr-2"></div>
-              <span className="text-sm text-neutral-600">Blocked (B)</span>
-            </div>
-            <div className="flex items-center">
               <div className="w-4 h-4 bg-blue-100 border-2 border-blue-300 rounded mr-2"></div>
-              <span className="text-sm text-neutral-600">Booked (R)</span>
+              <span className="text-sm text-neutral-600">Booked (B)</span>
             </div>
           </div>
 
@@ -235,12 +227,9 @@ const BookingCalendarModal: React.FC<BookingCalendarModalProps> = ({
               <h4 className="text-sm font-medium text-neutral-900 mb-2">
                 Selected Dates Summary ({selectedDates.size} dates)
               </h4>
-              <div className="grid grid-cols-3 gap-4 text-sm">
+              <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="text-green-600">
                   Available: {Array.from(selectedDates.values()).filter(d => d.status === 'available').length}
-                </div>
-                <div className="text-red-600">
-                  Blocked: {Array.from(selectedDates.values()).filter(d => d.status === 'blocked').length}
                 </div>
                 <div className="text-blue-600">
                   Booked: {Array.from(selectedDates.values()).filter(d => d.status === 'booked').length}

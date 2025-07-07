@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, Calendar, TrendingUp, MoreVertical, IndianRupee, Bed, Crown, Edit2, Trash2 } from 'lucide-react';
+import { ExternalLink, Calendar, TrendingUp, MoreVertical, IndianRupee, Bed, Crown, Edit2, Trash2, Star } from 'lucide-react';
 import { Property, Booking } from '../../types';
 
 interface PropertyCardProps {
@@ -23,9 +23,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   const currentMonthBookings = bookings.filter(b => b.date.startsWith(currentMonth));
   
   const bookedDays = currentMonthBookings.filter(b => b.status === 'booked').length;
-  const blockedDays = currentMonthBookings.filter(b => b.status === 'blocked').length;
   const totalDays = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
-  const availableDays = totalDays - bookedDays - blockedDays;
+  const availableDays = totalDays - bookedDays;
   const bookingRate = totalDays > 0 ? (bookedDays / totalDays) * 100 : 0;
   
   const monthlyEarnings = currentMonthBookings
@@ -42,6 +41,9 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             </h3>
             {property.propertyType === 'luxury' && (
               <Crown className="h-3 w-3 text-yellow-500" title="Luxury Property" />
+            )}
+            {property.isSuperhost && (
+              <Star className="h-3 w-3 text-orange-500" title="Superhost" />
             )}
           </div>
           
@@ -96,17 +98,11 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-1 mb-2">
+      <div className="grid grid-cols-2 gap-1 mb-2">
         <div className="bg-green-50 rounded-md p-1.5 text-center">
           <div className="text-xs text-green-600 mb-0.5">Available</div>
           <div className="text-xs font-semibold text-green-700">
             {availableDays}
-          </div>
-        </div>
-        <div className="bg-red-50 rounded-md p-1.5 text-center">
-          <div className="text-xs text-red-600 mb-0.5">Blocked</div>
-          <div className="text-xs font-semibold text-red-700">
-            {blockedDays}
           </div>
         </div>
         <div className="bg-blue-50 rounded-md p-1.5 text-center">

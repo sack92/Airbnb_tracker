@@ -15,6 +15,7 @@ export interface Property {
   description: string;
   bedrooms: number;
   propertyType: 'luxury' | 'normal';
+  isSuperhost: boolean;
   createdAt: Date;
 }
 
@@ -22,14 +23,14 @@ export interface Booking {
   id: string;
   propertyId: string;
   date: string; // YYYY-MM-DD format
-  status: 'available' | 'blocked' | 'booked';
+  status: 'available' | 'booked';
   price: number;
   notes?: string;
 }
 
 export interface CalendarDay {
   date: string;
-  status: 'available' | 'blocked' | 'booked';
+  status: 'available' | 'booked';
   price: number;
   isCurrentMonth: boolean;
 }
